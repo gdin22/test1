@@ -10,9 +10,9 @@ def index(request):
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         Contacts.objects.create(user=username, pwd=password)
-    user_list = Contacts.objects.all()
-    return HttpResponseRedirect("/showPage")
-    # return render(request, 'index.html', {'data': user_list})
+        user_list = Contacts.objects.all()
+        return HttpResponseRedirect("/showPage")
+    return render(request, 'index.html')
 
 
 def showPage(request):
@@ -28,4 +28,3 @@ def showPage(request):
         contacts = paginator.page(paginator.num_pages)
 
     return render(request, 'showPage.html', {'contacts': contacts})
-
