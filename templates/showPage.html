@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>showPage</title>
+</head>
+<body>
+<table border="1">
+{% for contact in contacts %}
+    <tr>
+        <td>{{ contact.user }}</td>
+        <td>{{ contact.pwd }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+<div class="paginator">
+    <span class="step-links">
+        {% if contacts.has_previous %}
+            <li>
+                <a href="?page={{ contacts.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for pg in contacts.paginator.page_range %}
+            {% if contacts.number == pg %}
+                <li class="active"><a href="?page={{ pg }}">{{ pg }}</a> </li>
+            {% else %}
+                <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if contacts.has_next %}
+            <li>
+                <a href="?page={{ contacts.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </span>
+</div>
+</body>
+</html>
