@@ -4,5 +4,8 @@ from django.db import models
 
 
 class Contacts(models.Model):
-    user = models.CharField(max_length=32)
-    pwd = models.CharField(max_length=32)
+    key = models.CharField(max_length=32)
+
+
+class SaveKeys(models.Model):
+    key = models.CharField(max_length=32)

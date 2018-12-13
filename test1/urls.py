@@ -22,4 +22,6 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     url('^index/', views.index),
     url('^showPage/', views.showPage),
+    url('^saveExcel/', views.saveExcel),
+    url(r'getExcel/([\w\s.\-]+)', views.getExcel),
 ]

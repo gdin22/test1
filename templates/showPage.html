@@ -3,43 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>showPage</title>
+    <link href="/static/css/site.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<table border="1">
-{% for contact in contacts %}
-    <tr>
-        <td>{{ contact.user }}</td>
-        <td>{{ contact.pwd }}</td>
-    </tr>
-{% endfor %}
-</table>
-
-<div class="paginator">
-    <span class="step-links">
-        {% if contacts.has_previous %}
-            <li>
-                <a href="?page={{ contacts.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-        {% endif %}
-
-        {% for pg in contacts.paginator.page_range %}
-            {% if contacts.number == pg %}
-                <li class="active"><a href="?page={{ pg }}">{{ pg }}</a> </li>
-            {% else %}
-                <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-            {% endif %}
+{% load static %}
+<div class="content">
+    <table border="1">
+    <form action="/saveExcel/" method="post">
+        {% for contact in contacts %}
+            <tr>
+                <td><a href="/static/image/{{ contact.key }}_1.png"><img src="/static/image/{{ contact.key }}_1_head.png" alt="加载错误重新导入excel"></a> </td>
+                <td><a href="/static/image/{{ contact.key }}_2.png"><img src="/static/image/{{ contact.key }}_2_head.png" alt="加载错误重新导入excel"></a> </td>
+                <td>
+                    {{ contact.key }}<br>
+                    保存:<input type="radio" name="{{ contact.key }}" value="1">
+                    不保存:<input type="radio" name="{{ contact.key }}" value="0">
+                </td>
+            </tr>
         {% endfor %}
+        <div class="up"><input type="submit" name="sub" value="提交"></div>
+        <div><input type="submit" name="sub" value="下载excel"></div>
+        <input type="text" value="{{ contacts.number }}" style="display: none" name="page">
+    </form>
 
-        {% if contacts.has_next %}
-            <li>
-                <a href="?page={{ contacts.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+    </table>
+
+    <div class="paginator" style="position: absolute">
+        <ul>
+        <span class="step-links">
+            {% if contacts.has_previous %}
+                <li>
+                    <a href="?page={{ contacts.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for pg in contacts.paginator.page_range %}
+                {% if contacts.number == pg %}
+                    <li class="active"><a href="?page={{ pg }}">{{ pg }}</a> </li>
+                {% else %}
+                    <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if contacts.has_next %}
+                <li>
+                    <a href="?page={{ contacts.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </span>
+        </ul>
+    </div>
+    <div style="float:right;">
+        {% if not contacts.has_next %}
+            <h1 style="color: red">这是最后一页</h1>
         {% endif %}
-    </span>
+    </div>
 </div>
 </body>
 </html>
