@@ -11,6 +11,9 @@ import xlrd
 # Create your views here.
 
 
+# 初始界面， 根据不同的选项跳转到不同的页面
+# 如果post则跳转到本页面 对excel进行分析 然后进行截图 重定向到展示页面
+# 在开始的时候删除数据库 这是单人用的 如果多人用 可能出现错误
 def index(request):
     if request.method == 'POST':
         try:
@@ -34,6 +37,7 @@ def index(request):
     return render(request, 'index.html')
 
 
+# 对数据库的内容进行分页 对截取的图片进行分页
 def showPage(request):
     contact_list = Contacts.objects.all()
     paginator = Paginator(contact_list, 2)
@@ -49,6 +53,8 @@ def showPage(request):
     return render(request, 'showPage.html', {'contacts': contacts})
 
 
+# 分析上传的excel
+# 生成链接列表还有关键词列表
 def getExcelMessage(fileName):
     workbook = xlrd.open_workbook(fileName)
     sheet = workbook.sheet_by_index(0)
@@ -60,11 +66,15 @@ def getExcelMessage(fileName):
     return urls, col0
 
 
+# 进行截图 但是在apache 上面出现错误 研究
 def screenshot(urls):
     for url in urls:
         os.system(r'python contact/screenShot.py "%s"' % url)
 
 
+# 在展示页面中如果要保存进行提交
+# 保存到数据库 不要的进行去除
+# 进而保存到excel 重定向到下载页面
 def saveExcel(request):
     currenttime = time.time()
     keylist = [contact.key for contact in Contacts.objects.all()]
@@ -90,6 +100,8 @@ def saveExcel(request):
     return redirect('/showPage?page=%s' % str(int(page)+1))
 
 
+# 把列表写进excel
+# 参数为 列表 还有 excel名称
 def writeExcel(list, excelName):
     style = xlwt.XFStyle()
     font = xlwt.Font()
@@ -107,6 +119,8 @@ def writeExcel(list, excelName):
     wd.save(excelName)
 
 
+# 把 两个列表写入excel
+# xlwt 只能写xls
 def write2x2Excel(list1, list2, excelName):
     style = xlwt.XFStyle()
     font = xlwt.Font()
@@ -124,6 +138,7 @@ def write2x2Excel(list1, list2, excelName):
     wd.save(excelName)
 
 
+# 下载excel表格 一般被用来当做重定向的对象
 @csrf_exempt
 def getExcel(request, path_name):
     def file_iterator(file_name, chunk_size=512):
@@ -150,6 +165,8 @@ def getExcel(request, path_name):
         return JsonResponse(ret, status=200)
 
 
+# 把excel中的小写字母转换为大写
+# 并加入展示页面的链接
 def tranexcel(request):
     if request.method == 'POST':
         try:
