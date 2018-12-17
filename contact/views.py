@@ -7,6 +7,7 @@ import os
 import xlrd
 import time
 import xlwt
+import xlrd
 # Create your views here.
 
 
@@ -106,6 +107,23 @@ def writeExcel(list, excelName):
     wd.save(excelName)
 
 
+def write2x2Excel(list1, list2, excelName):
+    style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.name = "Times New Roman"
+    font.bold = False
+    font.colour_index = 4
+    font.height = 220
+    style.font = font
+
+    wd = xlwt.Workbook()
+    sheet = wd.add_sheet('0')
+    for key in range(0, len(list1)):
+        sheet.write(key, 0, list1[key])
+        sheet.write(key, 1, list2[key])
+    wd.save(excelName)
+
+
 @csrf_exempt
 def getExcel(request, path_name):
     def file_iterator(file_name, chunk_size=512):
@@ -118,7 +136,8 @@ def getExcel(request, path_name):
                     break
 
     ret = {}
-    file_name = os.path.join('static', path_name)
+    #file_name = os.path.join('static', path_name)
+    file_name = path_name
     if os.path.exists(file_name):
         response = StreamingHttpResponse(file_iterator(file_name))
         response['Content-type'] = 'application/vnd.ms-excel'
@@ -130,3 +149,24 @@ def getExcel(request, path_name):
         ret['message'] = '返回失败'
         return JsonResponse(ret, status=200)
 
+
+def tranexcel(request):
+    if request.method == 'POST':
+        try:
+            excel = request.FILES.get('excel')
+            excelPath = excel.name
+            print(excelPath)
+            f = open(excelPath, 'wb')
+            for chunk in excel.chunks(chunk_size=1024):
+                f.write(chunk)
+        except Exception as e:
+            error = e
+        finally:
+            f.close()
+
+            allUrls, keylists = getExcelMessage(excelPath)
+            keylists = [i.upper() for i in keylists]
+            allUrls = ['www.amazon.com/dp/%s' % key for key in keylists]
+            excelPath = excelPath[:-1]
+            write2x2Excel(keylists, allUrls, excelPath)
+            return HttpResponseRedirect('/getExcel/%s' % excelPath)

@@ -24,4 +24,5 @@ urlpatterns = [
     url('^showPage/', views.showPage),
     url('^saveExcel/', views.saveExcel),
     url(r'getExcel/([\w\s.\-]+)', views.getExcel),
+    url(r'tranexcel/', views.tranexcel)
 ]
