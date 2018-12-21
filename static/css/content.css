@@ -1,0 +1,38 @@
+*{margin: 0px; padding: 0px}
+#content{
+    height: 600px;
+    margin: 20px auto 0px;
+}
+#content ul{
+    list-style: none;
+    width: 1000px;
+    height: 600px;
+    margin: auto;
+}
+
+#content ul li {
+    width: 500px;
+    height: 500px;
+    float: left;
+    position: relative;
+    overflow: hidden;
+}
+#content ul li div.tit{
+    width: 300px;
+    height: 50px;
+    position: absolute;
+    left: 0px;
+    bottom: -50px;
+    background: rgba(0,0,0,0.5);
+}
+#content ul li div.tit p{
+    color: #fff;
+    text-align: center;
+    margin: 3px;
+    font-family: "微软雅黑";
+}
+
+img{
+    width: 300px;
+    height: 500px;
+}

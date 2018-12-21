@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
 from contact import views
+from django.views.static import serve
 
 urlpatterns = [
     url('admin/', admin.site.urls),
@@ -24,5 +25,7 @@ urlpatterns = [
     url('^showPage/', views.showPage),
     url('^saveExcel/', views.saveExcel),
     url(r'getExcel/([\w\s.\-]+)', views.getExcel),
-    url(r'tranexcel/', views.tranexcel)
+    url(r'tranexcel/', views.tranexcel),
+    url(r'^get_cloud/$', views.get_cloud),
+    url(r'^make_image/$', views.make_image),
 ]
